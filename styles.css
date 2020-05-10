@@ -1,0 +1,36 @@
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* --- form --- */
+.form-container {
+  padding: 30px;
+}
+
+@media (min-width: 824px) {
+  form {
+    margin: 0 200px 0 200px;
+  }
+}
+
+p {
+  display: inline;
+  margin-right: 20px;
+}
+
+.note {
+  font-size: 1rem;
+}
+
+.item-card {
+  padding: 10px 0 0 10px;
+  /* border: 1px solid blue; */
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-card:hover {
+  background-color: #EDEDED;
+}
