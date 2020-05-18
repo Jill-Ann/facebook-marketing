@@ -3,10 +3,10 @@
 //   "method": "GET",
 //   "timeout": 0,
 // };
-var baseUrl = new URL('https://graph.facebook.com/search?type=adinterest&limit=1000&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM');
+var baseUrl = new URL('https://graph.facebook.com/search?type=adinterest&limit=10&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM');
 var params = baseUrl.searchParams;
 
-const resultsContainer = document.getElementById("root");
+const resultsContainer = document.getElementById("results");
 const aud = document.getElementById("aud");
 // resultsContainer.setAttribute("class", "results-container");
 // main.appendChild(resultsContainer);
@@ -17,7 +17,7 @@ function formatNumber(num) {
 }
 
 function getKeyword() {
-  var keyword = document.getElementById("key").value;
+  var keyword = document.getElementById("key-input").value;
   return keyword;
 }
 
@@ -29,9 +29,9 @@ function getLocale(){
 function setParams(){
   var keyword = getKeyword();
   var locale = getLocale();
-  params.append('q', keyword);
+  params.set('q', keyword);
   // params.append('q', `[${keyword}]`);
-  params.append('locale', locale);
+  params.set('locale', locale);
   baseUrl.search = params.toString();
   var newUrl = baseUrl.toString();
   console.log(newUrl);
@@ -61,6 +61,20 @@ function callApi(){
   });
 }
 
+function clearContent() {
+  document.getElementById("results").innerHTML = "";
+  // console.log("clear");
+}
+
+function resetAndCall(){
+  clearContent()
+  callApi()
+}
+
+function check(){
+  console.log("Hi");
+}
+
 // function showData(result) {
 //     // const card = document.createElement("div");
 //     // card.setAttribute("class", "card");
@@ -71,8 +85,8 @@ function callApi(){
 //     audience.textContent = `Audience size: ${size}`;
 //     // card.appendChild(interest);
 //     // card.appendChild(audience);
-//     $("#root").append(interest);
-//     $("#root").append(audience);
+//     $("#results").append(interest);
+//     $("#results").append(audience);
 // }
 // ^^better to have this here or inside the api call? like above
 
