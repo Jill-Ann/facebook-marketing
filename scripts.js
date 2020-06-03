@@ -3,7 +3,7 @@
 //   "method": "GET",
 //   "timeout": 0,
 // };
-var baseUrl = new URL('https://graph.facebook.com/search?type=adinterest&limit=10&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM');
+var baseUrl = new URL('https://graph.facebook.com/search?limit=500&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM');
 var params = baseUrl.searchParams;
 
 const resultsContainer = document.getElementById("results");
@@ -13,7 +13,7 @@ const aud = document.getElementById("aud");
 
 //puts commas in audience size number
 function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
 function getKeyword() {
@@ -21,17 +21,43 @@ function getKeyword() {
   return keyword;
 }
 
+function getSearchType() {
+  var type;
+  var typeInput = document.getElementById("search-type").value;
+  if (typeInput === "Ad Interest") {
+    type = "adinterest";
+  } else {
+    type = "adinterestsuggestion";
+  }
+  return type;
+}
+
 function getLocale(){
-  var locale = document.getElementById("locale").value;
+  var locale;
+  var localeInput = document.getElementById("locale").value;
+  if (localeInput === "English") {
+    locale = "en_US";
+  } else if (localeInput === "German") {
+    locale = "de_DE";
+  } else {
+    locale = "es_ES";
+  }
   return locale;
 }
 
 function setParams(){
   var keyword = getKeyword();
+  var type = getSearchType();
   var locale = getLocale();
-  params.set('q', keyword);
+
+  if (type === "adinterestsuggestion") {
+    params.set('interest_list', `["${keyword}"]`);
+  } else {
+    params.set('q', keyword);
+  }
   // params.append('q', `[${keyword}]`);
   params.set('locale', locale);
+  params.set('type', type);
   baseUrl.search = params.toString();
   var newUrl = baseUrl.toString();
   console.log(newUrl);
