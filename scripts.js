@@ -18,7 +18,8 @@ function formatNumber(num) {
 
 function getKeyword() {
   var keyword = document.getElementById("key-input").value;
-  return keyword;
+  var keywordCap = keyword.charAt(0).toUpperCase() + keyword.slice(1);
+  return keywordCap;
 }
 
 function getSearchType() {
