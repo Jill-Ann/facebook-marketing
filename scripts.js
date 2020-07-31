@@ -18,8 +18,8 @@ function formatNumber(num) {
 
 function getKeyword() {
   var keyword = document.getElementById("key-input").value;
-  var keywordCap = keyword.charAt(0).toUpperCase() + keyword.slice(1);
-  return keywordCap;
+  var keywordUpCase = keyword.charAt(0).toUpperCase() + keyword.slice(1);
+  return keywordUpCase;
 }
 
 function getSearchType() {
@@ -45,6 +45,10 @@ function getLocale(){
   }
   return locale;
 }
+
+// const keyword = getKeyword();
+// const searchType = getSearchType();
+// const locale = getLocale();
 
 function setParams(){
   var keyword = getKeyword();
