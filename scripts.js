@@ -1,41 +1,26 @@
-// var settings = {
-//   "url": "https://graph.facebook.com/search?type=adinterest&q=[Beach]&limit=10&locale=en_US&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM",
-//   "method": "GET",
-//   "timeout": 0,
-// };
-var baseUrl = new URL('https://graph.facebook.com/search?limit=500&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM');
-var params = baseUrl.searchParams;
+let baseUrl = new URL('https://graph.facebook.com/search?limit=500&access_token=677916593037704|gvX9a7sygGJ3nMNvSvr5WalhCCM');
+// get access to URLSearchParams object
+let params = baseUrl.searchParams;
 
 const resultsContainer = document.getElementById("results");
-const aud = document.getElementById("aud");
-// resultsContainer.setAttribute("class", "results-container");
-// main.appendChild(resultsContainer);
 
-//puts commas in audience size number
-function formatNumber(num) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-}
-
-function getKeyword() {
-  var keyword = document.getElementById("key-input").value;
-  var keywordUpCase = keyword.charAt(0).toUpperCase() + keyword.slice(1);
+const getKeyword = () => {
+  let keyword = document.getElementById("key-input").value;
+  let keywordUpCase = keyword.charAt(0).toUpperCase() + keyword.slice(1);
+  // console.log(keywordUpCase);
   return keywordUpCase;
 }
 
-function getSearchType() {
-  var type;
-  var typeInput = document.getElementById("search-type").value;
-  if (typeInput === "Ad Interest") {
-    type = "adinterest";
-  } else {
-    type = "adinterestsuggestion";
-  }
+const getSearchType = () => {
+  let type;
+  let typeInput = document.getElementById("search-type").value;
+  (typeInput === "Ad Interest") ? type = "adinterest" : type = "adinterestsuggestion";
   return type;
 }
 
-function getLocale(){
-  var locale;
-  var localeInput = document.getElementById("locale").value;
+const getLocale = () => {
+  let locale;
+  let localeInput = document.getElementById("locale").value;
   if (localeInput === "English") {
     locale = "en_US";
   } else if (localeInput === "German") {
@@ -46,85 +31,59 @@ function getLocale(){
   return locale;
 }
 
-// const keyword = getKeyword();
-// const searchType = getSearchType();
-// const locale = getLocale();
-
-function setParams(){
-  var keyword = getKeyword();
-  var type = getSearchType();
-  var locale = getLocale();
-
+const setParams = () => {
+  let keyword = getKeyword();
+  let type = getSearchType();
+  let locale = getLocale();
   if (type === "adinterestsuggestion") {
     params.set('interest_list', `["${keyword}"]`);
   } else {
     params.set('q', keyword);
   }
-  // params.append('q', `[${keyword}]`);
   params.set('locale', locale);
   params.set('type', type);
-  baseUrl.search = params.toString();
-  var newUrl = baseUrl.toString();
+  let newUrl = baseUrl.toString();
   console.log(newUrl);
   return newUrl;
 }
 
-function callApi(){
-  $.ajax(setParams()).done(function (response) {
-    // console.log(response);
-    response.data.forEach(result => {
-      const itemCard = document.createElement("div");
-      itemCard.setAttribute("class", "item-card");
-
-      const interest = document.createElement("p");
-      const audience = document.createElement("p");
-      const size = formatNumber(result.audience_size)
-
-      interest.setAttribute("class", "interest")
-      audience.setAttribute("class", "audience-size")
-
-      interest.textContent = result.name;
-      audience.textContent = size;
-      resultsContainer.appendChild(itemCard);
-      itemCard.appendChild(interest);
-      itemCard.appendChild(audience);
-    });
-  });
+const formatNumber = (num) => {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
-function clearContent() {
+// where is result passed as argument?
+const showData = (result) => { // where is result passed as argument?
+  const itemCard = document.createElement("div");
+  const interest = document.createElement("p");
+  const audience = document.createElement("p");
+  const audienceSize = formatNumber(result.audience_size);
+
+  itemCard.setAttribute("class", "item-card");
+  interest.setAttribute("class", "interest")
+  audience.setAttribute("class", "audience-size")
+
+  interest.textContent = result.name;
+  audience.textContent = audienceSize;
+  resultsContainer.appendChild(itemCard);
+  itemCard.appendChild(interest);
+  itemCard.appendChild(audience);
+}
+// how to split this up into smaller functions?
+
+// write function for adinterest to exclude options that don't include keyword?
+
+const callApi = () => {
+  $.ajax(setParams()).done((response) => {
+    console.log(response);
+    response.data.forEach(showData);
+  })
+}
+
+const clearContent = () => {
   document.getElementById("results").innerHTML = "";
-  // console.log("clear");
 }
 
-function resetAndCall(){
-  clearContent()
-  callApi()
+const resetAndCall = () => {
+  clearContent();
+  callApi();
 }
-
-function check(){
-  console.log("Hi");
-}
-
-// function showData(result) {
-//     // const card = document.createElement("div");
-//     // card.setAttribute("class", "card");
-//     const interest = document.createElement("p");
-//     const audience = document.createElement("p");
-//     const size = formatNumber(result.audience_size)
-//     interest.textContent = result.name;
-//     audience.textContent = `Audience size: ${size}`;
-//     // card.appendChild(interest);
-//     // card.appendChild(audience);
-//     $("#results").append(interest);
-//     $("#results").append(audience);
-// }
-// ^^better to have this here or inside the api call? like above
-
-// calls API
-// function callApi(){
-//   $.ajax(setParams()).done(function (response) {
-//     console.log(response);
-//     response.data.forEach(showData);
-//   });
-// }
